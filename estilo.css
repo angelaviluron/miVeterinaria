@@ -1,0 +1,58 @@
+.fondoVerde{
+    background-color: #009473 !important;
+    padding: 0 20px;
+
+}
+.cajaBase{
+    margin: 50px auto;
+}
+.navbar-brand-personalizada {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.7rem;
+  }
+  
+  .dropdown-menu-custom {
+    background-color: #00735c;
+  }
+
+  .formularioAmo {
+    border: 1px solid #00735c;
+    background-color: #f6fffc;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.tituloFormulario {
+    color: #00735c;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.inputFormulario {
+    border-color: #00735c;
+}
+
+.inputFormulario:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 147, 115, 0.25);
+    border-color: #009473;
+}
+
+.botonFormulario {
+    color:white;
+    background-color: #009473;
+    border-color: #00735c;
+}
+
+.botonFormulario:hover {
+    background-color: #00735c;
+    border-color: #00614f;
+}
+
+.listadoAmo {
+    background-color: #f6fffc;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+  
+ 
