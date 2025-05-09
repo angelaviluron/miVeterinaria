@@ -14,7 +14,7 @@
         <h5 class="card-title mb.4 tituloFormulario">Cargar Mascota</h5>
       <?php
       
-        echo form_open('form/cargarMascota');
+        echo form_open(base_url('form/cargarMascota'));
         echo '<div class="mb-3">';
         echo form_label('Nombre', 'nombre',['class'=>'form-label']);
         echo form_input(array('name'=>'nombre',
@@ -52,7 +52,7 @@
         ]);
         echo '</div>';
         echo '<div class="mb-3">';
-        echo form_submit('enviar','Cargar mascota',['class'=>'btn botonFormulario w-100']);
+        echo form_submit('enviar','Cargar mascota',['class'=>'btn botonFormulario w-100']).'<br><br>';
         echo form_reset('reset','Limpiar Formulario',['class'=>'btn botonFormulario w-100']);
         echo '</div>';
         echo form_close();

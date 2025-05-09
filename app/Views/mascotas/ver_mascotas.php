@@ -2,7 +2,7 @@
 
 <div class="container mt-4 listadoAmo">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="tituloFormulario m-0">Listado de Amos</h4>
+        <h4 class="tituloFormulario m-0">Listado de mascotas</h4>
         <a class="btn botonFormulario" href="<?= base_url('CargarMascota') ?>">+ Nueva Mascota</a>
     </div>
 
@@ -13,6 +13,16 @@
             <a href="<?= base_url('index.php/CargarMascota') ?>" class="btn btn-outline-secondary">¡Haz click Aquí!</a>
         </div>
     <?php } else { ?>
+
+              <?php if (session()->has('errors')): ?>
+                  <div class="alert alert-danger">
+                  <ul>
+                      <?php foreach (session('errors') as $error): ?>
+                      <li><?= esc($error) ?></li>
+                      <?php endforeach; ?>
+                  </ul>
+                  </div>
+      <?php endif; ?>
         <div class="table-responsive shadow-sm border rounded">
             <table class="table table-striped table-hover mb-0">
                 <thead class="thead-dark">
@@ -46,6 +56,12 @@
                             <td>
                                 <a class="btn btn-sm btn-outline-info me-2">Ver Amos</a>
                                 <a href="<?= base_url('ModificarMascota/' . $mascota['m_nroRegistro']) ?>" class="btn btn-sm btn-outline-info me-2">Editar</a>
+                                <button type="button" class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#adoptarModal" onclick="setMascotaId('<?php echo $mascota['m_nroRegistro']; ?>')">
+                                    Adoptar
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#darBajaModal" onclick="setMascotaBajaId('<?php echo $mascota['m_nroRegistro']; ?>')">
+                                    Dar de baja
+                                </button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -54,5 +70,78 @@
         </div>
     <?php } ?>
 </div>
+                                <!--Modal adopcion-->
+<div class="modal fade" id="adoptarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Adoptar Mascota</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+    <div class="modal-body">
+        <?php
+            echo form_open(base_url('form/adoptarMascota'));
+            echo '<input type="hidden" name="idMascota" id="idInputMascota" value="">';
+            echo form_label('Id del futuro dueño', 'idDueño',['class'=>'form-label']);
+            echo form_input(array('name'=>'idAmo',
+                        'id'=>'idAmo',
+                        'class'=>'form-control inputFormulario',
+                        'placeholder'=>'Id'
+                        ));
+        
+        ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-info me-2" data-bs-dismiss="modal">Cerrar</button>
+        <?php 
+            echo form_submit('enviar','Adoptar',['class'=>'btn btn-sm btn-outline-info me-2']);
+            echo form_close(); 
+        ?>
+      </div>
+    </div>
+  </div>
+</div>
+                    <!--fin modal adopcion-->
+                    <!--modal baja-->
+<div class="modal fade" id="darBajaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Dar de baja la relacion</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+    <div class="modal-body">
+        <?php
+            echo form_open(base_url('form/darBaja'));
+            echo '<input type="hidden" name="idMascota" id="idInputMascotaBaja" value="">';
+            echo form_label('Motivo');
+            echo form_dropdown(
+                'motivo',[
+                    '1'=>'Fallecio',
+                    '2'=>'Abandono'
+                ],'',
+                ['class'=>'form-control mb2']
+            );
+        
+        ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-outline-info me-2" data-bs-dismiss="modal">Cerrar</button>
+        <?php 
+            echo form_submit('enviar','Confirmar',['class'=>'btn btn-sm btn-outline-info me-2']);
+            echo form_close(); 
+        ?>
+      </div>
+    </div>
+  </div>
+</div>
 
+<script>
+    function setMascotaId(id) {
+        document.getElementById('idInputMascota').value = id;
+      }
+    function setMascotaBajaId(id) {
+        document.getElementById('idInputMascotaBaja').value = id;
+    }
+</script>
 <?= $footer ?>
