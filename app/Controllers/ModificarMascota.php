@@ -60,7 +60,7 @@ class ModificarMascota extends BaseController
         ];
         $mascotaModel = new MascotaModel();
         $mascotaModel->update($id,$data);
-        return redirect()->to(base_url("index.php/VerMascotas"));
+        return redirect()->to(site_url("VerMascotas"));
     }
 
 }

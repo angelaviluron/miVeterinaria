@@ -51,6 +51,6 @@ class CargarMascota extends BaseController
             'm_especie'=>$this->request->getPost('especie'),
             'm_nacimiento'=>$this->request->getPost('fechaN')
         ]);
-        return redirect()->to(base_url()."index.php/CargarMascota");
+        return redirect()->to(base_url("VerMascotas"));
     }
 }
