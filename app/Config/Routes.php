@@ -24,3 +24,4 @@ $routes->get('VerMascotas','VerMascotas::index');
 $routes->get('ModificarMascota/(:num)','ModificarMascota::index/$1');
 $routes->post('form/modificarMascota','ModificarMascota::modificar');
 $routes->post('form/adoptarMascota', 'VerMascotas::adoparMascota');
+$routes->post('form/darBaja', 'VerMascotas::darBajaMascota');
