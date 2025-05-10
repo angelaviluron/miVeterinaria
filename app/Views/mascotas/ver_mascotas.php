@@ -59,7 +59,7 @@
                                 <button type="button" class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#adoptarModal" onclick="setMascotaId('<?php echo $mascota['m_nroRegistro']; ?>')">
                                     Adoptar
                                 </button>
-                                <button type="button" class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#darBajaModal" onclick="setMascotaBajaId('<?php echo $mascota['m_nroRegistro']; ?>')">
+                                <button type="button" class="btn btn-sm btn-outline-danger me-2" data-bs-toggle="modal" data-bs-target="#darBajaModal" onclick="setMascotaBajaId('<?php echo $mascota['m_nroRegistro']; ?>')">
                                     Dar de baja
                                 </button>
                             </td>
@@ -118,7 +118,8 @@
             echo form_dropdown(
                 'motivo',[
                     '1'=>'Fallecio',
-                    '2'=>'Abandono'
+                    '2'=>'Abandono',
+                    '3'=>'Venta'
                 ],'',
                 ['class'=>'form-control mb2']
             );
