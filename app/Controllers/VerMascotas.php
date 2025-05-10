@@ -34,7 +34,7 @@ class VerMascotas extends BaseController
         $existeVinculo = $vinculo
         ->where('v_a_id', $idAmo)
         ->where('v_m_nroRegistro', $idMascota)
-        ->where('v_estado', 0)  // activo
+        ->where('v_estado', 1)  // activo
         ->first();
 
         if($existeVinculo){
@@ -46,11 +46,55 @@ class VerMascotas extends BaseController
         $vinculo->save([
             'v_a_id'=>$idAmo,
             'v_m_nroRegistro'=>$idMascota,
-            'v_estado'=>0,
+            'v_estado'=>1,
             'v_fechaAdopcion'=>$fechaActual
         ]);
 
        return redirect()->to(base_url('VerMascotas'));
+    }
+
+    public function darBajaMascota(){
+        $idMascota = $this->request->getPost('idMascota');
+        $vinculo = new VinculoModel();
+        $motivo = $this->request->getPost('motivo');
+        $fechaActual = date('Y-m-d H:i:s');
+        $existeVinculo = $vinculo
+                            ->where('v_m_nroRegistro', $idMascota)
+                            ->where('v_estado', 1)  // activo
+                            ->first();
+        if(!$existeVinculo){
+            $errores=[
+                'vinculoNoExistente' => 'Esta mascota no tiene ningun vinculo'
+            ];
+            if($motivo==1){
+                //se agrega fecha de fallecimiento
+                $dato=[
+                    'm_fechaBaja'=>$fechaActual
+                ];
+                $mascota = new MascotaModel(); 
+                $mascota->update($idMascota,$dato);
+                $errores['fallecimiento'] = 'Se ha cargado el estado de la mascota';
+            }
+            return redirect()->to(base_url().'VerMascotas')->with('errors', $errores);
+        }
+
+        $idVinculo = $existeVinculo['v_id'];
+        $data =[
+            'v_estado'=>0,
+            'v_fechaBaja'=>$fechaActual,
+            'v_motivoBaja'=>$motivo
+        ];
+        $vinculo->update($idVinculo,$data);
+
+        if($motivo==1){
+            //se agrega fecha de fallecimiento
+            $dato=[
+                'm_fechaBaja'=>$fechaActual
+            ];
+            $mascota = new MascotaModel(); 
+            $mascota->update($idMascota,$dato);
+        }
+        return redirect()->to(base_url('VerMascotas'));
     }
 
 }
