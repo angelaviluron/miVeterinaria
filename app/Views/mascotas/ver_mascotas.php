@@ -80,15 +80,16 @@
       </div>
     <div class="modal-body">
         <?php
+            foreach ($amos as $amo) {
+                $options[$amo['a_id']] = $amo['a_nombre'] .' '. $amo['a_apellido'];
+            }
             echo form_open(base_url('form/adoptarMascota'));
             echo '<input type="hidden" name="idMascota" id="idInputMascota" value="">';
-            echo form_label('Id del futuro dueño', 'idDueño',['class'=>'form-label']);
-            echo form_input(array('name'=>'idAmo',
-                        'id'=>'idAmo',
-                        'class'=>'form-control inputFormulario',
-                        'placeholder'=>'Id'
-                        ));
-        
+            echo form_label('Futuro dueño', 'idAmo', ['class' => 'form-label']);
+            echo form_dropdown('idAmo', $options, '', [
+                'id' => 'idAmo',
+                'class' => 'form-select inputFormulario',
+            ]);
         ?>
       </div>
       <div class="modal-footer">
