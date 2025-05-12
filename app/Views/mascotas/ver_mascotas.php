@@ -55,6 +55,8 @@
                             <td><?= $mascota['m_nacimiento'] ?></td>
                             <td>
                                 <a class="btn btn-sm btn-outline-info me-2">Ver Amos</a>
+                                <?php if($mascota['m_fechaBaja'] == '0000-00-00'){ ?>
+
                                 <a href="<?= base_url('ModificarMascota/' . $mascota['m_nroRegistro']) ?>" class="btn btn-sm btn-outline-info me-2">Editar</a>
                                 <button type="button" class="btn btn-sm btn-outline-info me-2" data-bs-toggle="modal" data-bs-target="#adoptarModal" onclick="setMascotaId('<?php echo $mascota['m_nroRegistro']; ?>')">
                                     Adoptar
@@ -62,6 +64,8 @@
                                 <button type="button" class="btn btn-sm btn-outline-danger me-2" data-bs-toggle="modal" data-bs-target="#darBajaModal" onclick="setMascotaBajaId('<?php echo $mascota['m_nroRegistro']; ?>')">
                                     Dar de baja
                                 </button>
+
+                                <?php } ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
