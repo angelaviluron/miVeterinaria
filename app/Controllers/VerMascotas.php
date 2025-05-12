@@ -23,16 +23,9 @@ class VerMascotas extends BaseController
     public function adoparMascota(){
         $idMascota = $this->request->getPost('idMascota');
         $idAmo = $this->request->getPost('idAmo');
-        $amos = new Amo();
-        $amo = $amos->where('a_id', $idAmo)->first();
-
-        if(!$amo){
-            return redirect()->back()->with('errors', ['amo' => 'Amo no encontrado']);
-        }
 
         $vinculo = new VinculoModel();
         $existeVinculo = $vinculo
-        ->where('v_a_id', $idAmo)
         ->where('v_m_nroRegistro', $idMascota)
         ->where('v_estado', 1)  // activo
         ->first();
