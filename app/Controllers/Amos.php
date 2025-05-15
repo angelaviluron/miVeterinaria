@@ -3,7 +3,8 @@ namespace App\Controllers;
 
 use CodeIgniter\Controller;
 use App\Models\Amo;
-use CodeIgniter\Images\Image;
+use App\Models\VinculoModel;
+
 
 class Amos extends Controller
 {
@@ -13,14 +14,42 @@ class Amos extends Controller
     }
 
     public function index()
-    {
-        $amo = new Amo();
-        $datos['amos'] = $amo->orderBy('a_id', 'ASC')->findAll();
-        $datos['header'] = view('header');
-        $datos['footer'] = view('footer');
+{
+    $amo = new Amo();
 
-        return view("amos/mostrar_amo", $datos);
+    $orden = $this->request->getGet('orden') ?? 'a_id_asc';
+
+    
+    switch ($orden) {
+        case 'apellido_asc':
+            $campo = 'a_apellido';
+            $direccion = 'ASC';
+            break;
+        case 'apellido_desc':
+            $campo = 'a_apellido';
+            $direccion = 'DESC';
+            break;
+        case 'fecha_asc':
+            $campo = 'a_fechaAlta'; 
+            $direccion = 'ASC';
+            break;
+        case 'fecha_desc':
+            $campo = 'a_fechaAlta';
+            $direccion = 'DESC';
+            break;
+        default:
+            $campo = 'a_id';
+            $direccion = 'ASC';
+            break;
     }
+
+    $datos['amos'] = $amo->orderBy($campo, $direccion)->findAll();
+    $datos['header'] = view('header');
+    $datos['footer'] = view('footer');
+
+    return view("amos/mostrar_amo", $datos);
+}
+
 
     public function cargar()
     {
@@ -31,30 +60,55 @@ class Amos extends Controller
     }
 
     public function guardar()
-    {
-        $amo = new Amo();
+{
+    $amo = new Amo();
 
-        // Obtener los datos del formulario con los NOMBRES correctos
-        $datos = [
-            'a_nombre'   => $this->request->getPost('a_nombre'),
-            'a_apellido' => $this->request->getPost('a_apellido'),
-            'a_dir'      => $this->request->getPost('a_dir'),
-            'a_tel'      => $this->request->getPost('a_tel'),
-        ];
+    $validacion = $this->validate([
+        'a_nombre' => [
+            'label' => 'Nombre',
+            'rules' => 'required|min_length[3]|regex_match[/^[a-zA-Z\s]+$/]',
+            'errors' => [
+                'required' => 'El campo {field} es obligatorio.',
+                'min_length' => 'El {field} debe tener al menos 3 caracteres.',
+                'regex_match' => 'El {field} solo puede contener letras y espacios.'
+            ]
+        ],
+        'a_apellido' => [
+            'label' => 'Apellido',
+            'rules' => 'required|min_length[3]|regex_match[/^[a-zA-Z\s]+$/]',
+            'errors' => [
+                'required' => 'El campo {field} es obligatorio.',
+                'min_length' => 'El {field} debe tener al menos 3 caracteres.',
+                'regex_match' => 'El {field} solo puede contener letras y espacios.'
+            ]
+        ],
+        'a_tel' => [
+            'label' => 'Teléfono',
+            'rules' => 'required|numeric|max_length[15]',
+            'errors' => [
+                'required' => 'El campo {field} es obligatorio.',
+                'numeric' => 'El {field} solo debe contener números.',
+                'max_length' => 'El {field} no debe superar los 15 dígitos.'
+            ]
+        ]
+    ]);
 
-        // Subida de imagen (opcional)
-        if ($imagen = $this->request->getFile('imagen')) {
-            if ($imagen->isValid() && !$imagen->hasMoved()) {
-                $nuevoNombre = $imagen->getRandomName();
-                $imagen->move('../public/imagenes/', $nuevoNombre);
-                $datos['imagen'] = $nuevoNombre;
-            }
-        }
-
-        $amo->insert($datos);
-
-        return $this->response->redirect(base_url('/mostrar_amo'));
+    if (!$validacion) {
+        return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
     }
+
+    $datos = [
+        'a_nombre'   => $this->request->getPost('a_nombre'),
+        'a_apellido' => $this->request->getPost('a_apellido'),
+        'a_dir'      => $this->request->getPost('a_dir'),
+        'a_tel'      => $this->request->getPost('a_tel'),
+    ];
+
+    $amo->insert($datos);
+
+    return $this->response->redirect(base_url('/mostrar_amo'));
+}
+
 
     public function borrar($id=null){
 
@@ -94,12 +148,40 @@ class Amos extends Controller
 
         $this->response->redirect(base_url('/mostrar_amo'));
     }
-    
-    
+
+
+    public function amo_de_mascota($id = null)
+{
+    $vinculoModel = new VinculoModel();
+    $amoModel = new Amo();
+
+    $vinculos = $vinculoModel->where('v_m_nroRegistro', $id)->findAll();
+
+    $datos['amos'] = [];
+
+    if (!empty($vinculos)) {
+        foreach ($vinculos as $vinculo) {
+            $amo = $amoModel->find($vinculo['v_a_id']);
+            if ($amo) {
+                // Agregamos el estado del vínculo a cada amo
+                $amo['v_estado'] = $vinculo['v_estado'];
+                $datos['amos'][] = $amo;
+            }
+        }
+    }
+
+    $datos['header'] = view('header'); 
+    $datos['footer'] = view('footer'); 
+
+    return view("mascotas/amo_de_mascota", $datos);
 }
-/*para imagenes
-<img class="img-thumbnail" alt=" src='<?=base_url()?> /uploads/ <?=$amo['imagen'];?> ' >
-*/
+
+
+    }
+    
+    
+
+
 ?>
 
 
