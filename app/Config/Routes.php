@@ -34,3 +34,4 @@ $routes->post('guardar_veterinario', 'Veterinarios::guardar');
 $routes->get('borrar_veterinario/(:num)', 'Veterinarios::borrar/$1'); 
 $routes->get('editar_veterinario/(:num)', 'Veterinarios::editar/$1');
 
+$routes->get('Principal','Principal::index');
